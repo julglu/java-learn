@@ -5,9 +5,9 @@ package Objects.LinkedList;
  */
 public class LinkedList {
 
-    ListItem startItem;
+    public ListItem startItem;
 
-    public void add(int value) {
+    public void add(Object value) {
         ListItem newItem = new ListItem(value);
         if (startItem == null) {
             startItem = newItem;
@@ -25,19 +25,7 @@ public class LinkedList {
         }
     }
 
-    public void print() {
-        ListItem curItem = startItem, nextItem;
-        while (true) {
-            System.out.println(curItem.value);
-            nextItem = curItem.link;
-            if (nextItem == null) {
-                break;
-            }
-            curItem = nextItem;
-        }
-    }
-
-    public int getVal(int i) {
+    public Object getVal(int i) {
         int cnt = 0;
 
         if (startItem == null) {
