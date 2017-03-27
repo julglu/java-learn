@@ -3,8 +3,8 @@ package Objects.accumulator;
 /*
  * Created by Юлия on 24.03.2017.
  */
-public class Pow extends Operation {
-    @Override
+public class Pow implements Operation {
+
     public int apply(int a1, int a2) {
         int rez = a1;
         for (int i = 1; i < a2; i++) {

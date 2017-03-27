@@ -1,9 +1,14 @@
 package Objects.LinkedList;
 
+import Objects.interfaces.List;
+import Objects.interfaces.Stack;
+
+import java.util.Iterator;
+
 /*
  * Created by Юлия on 20.03.2017.
  */
-public class LinkedList {
+public class LinkedList implements Stack, List {
 
     public ListItem startItem;
 
@@ -25,7 +30,7 @@ public class LinkedList {
         }
     }
 
-    public Object getVal(int i) {
+    public Object get(int i) {
         int cnt = 0;
 
         if (startItem == null) {
@@ -47,23 +52,28 @@ public class LinkedList {
         }
     }
 
-    public void remove(int i) {
+    public Object remove(int i) {
         int cnt = 0;
         if (startItem == null) {
             System.out.println("Список пуст");
+            return null;
 
         } else if (i == 0) {
+            Object val=startItem.value;
             startItem = startItem.link;
+            return val;
         } else {
             ListItem curItem = startItem, prevItem = startItem;
+            Object val;
             while (true) {
                 if (cnt == i) {
+                    val=curItem.value;
                     prevItem.link = curItem.link;
-                    break;
+                    return val;
                 }
                 if (curItem.link == null) {
                     System.out.println("Элемент с индексом " + i + " не найден");
-                    break;
+                    return null;
                 }
 
                 prevItem = curItem;
@@ -71,5 +81,22 @@ public class LinkedList {
                 cnt++;
             }
         }
+    }
+
+    @Override
+    public void push(Object val) {
+        ListItem next = startItem;
+        startItem = new ListItem(val);
+        startItem.link = next;
+    }
+
+    @Override
+    public Object poll() {
+        return remove(0);
+    }
+
+    @Override
+    public Iterator iterator() {
+        return new LinkedListIterator(startItem);
     }
 }
