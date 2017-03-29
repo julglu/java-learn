@@ -10,7 +10,7 @@ import java.util.Iterator;
 public class ArrayList implements List {
 
     private final int DEFAULT_SIZE = 10;
-    public int nextItemIndex;//Индекс первого пустого элемента в массиве
+    int nextItemIndex;//Индекс первого пустого элемента в массиве
     Object[] items;
 
     public ArrayList() {
@@ -56,5 +56,47 @@ public class ArrayList implements List {
     @Override
     public Iterator iterator() {
         return new ArrayListIterator(this);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{'");
+        int length = 2;
+        for (int i = 0; i < nextItemIndex; i++) {
+            Object o = items[i];
+            sb.append(o.toString() + "', '");
+            length += o.toString().length() + 4;
+        }
+
+        sb.delete(length - 3, length);
+        sb.append("}");
+        return sb.toString();
+    }
+
+
+    public static class ArrayListIterator implements Iterator {
+        private ArrayList l;
+        private int next;
+
+        public ArrayListIterator(ArrayList list) {
+            l = list;
+            next = 0;
+
+        }
+
+        @Override
+        public boolean hasNext() {
+            return next < l.nextItemIndex;
+        }
+
+        @Override
+        public Object next() {
+            if (hasNext()) {
+                next++;
+                return l.items[next - 1];
+            }
+            return null;
+        }
     }
 }
