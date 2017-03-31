@@ -30,7 +30,6 @@ public class LinkedList implements Stack, List {
         }
     }
 
-
     public Object get(int i) {
         int cnt = 0;
 
@@ -80,6 +79,43 @@ public class LinkedList implements Stack, List {
             curItem = curItem.link;
             cnt++;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int rez=1;
+        ListItem next=startItem;
+        while(next!=null){
+            rez=31*rez+next.value.hashCode();
+            next=next.link;
+        }
+        return rez;
+    }
+
+    @Override
+    public int getLength(){
+        ListItem next=startItem;
+        int cnt=0;
+        while(next!=null){
+            cnt++;
+            next=next.link;
+        }
+        return cnt;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if(obj==null)
+            return false;
+        List l=(LinkedList)obj;
+        Iterator iter1=this.iterator();
+        Iterator iter2=l.iterator();
+        while(iter1.hasNext()){
+            if(iter1.hasNext()!=iter2.hasNext())
+                return false;
+            if(!iter1.next().equals(iter2.next()))
+                return false;
+        }
+        return true;
     }
 
     @Override
