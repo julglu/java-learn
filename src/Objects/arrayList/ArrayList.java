@@ -24,6 +24,11 @@ public class ArrayList implements List {
     }
 
     @Override
+    public int getLength() {
+        return nextItemIndex;
+    }
+
+    @Override
     public void add(Object o) {
         if (nextItemIndex >= items.length) {
             Object[] newArray = new Object[items.length * 2];
