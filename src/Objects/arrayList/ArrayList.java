@@ -1,5 +1,7 @@
 package Objects.arrayList;
 
+import Objects.exceptions.getAbsentElementException;
+import Objects.exceptions.modifyingWhileIterationException;
 import Objects.interfaces.List;
 
 import java.util.Iterator;
@@ -7,7 +9,7 @@ import java.util.Iterator;
 /*
  * Created by Юлия on 26.03.2017.
  */
-public class ArrayList implements List {
+public class ArrayList<T> implements List<T> {
 
     private final int DEFAULT_SIZE = 10;
     int nextItemIndex;//Индекс первого пустого элемента в массиве
@@ -24,12 +26,12 @@ public class ArrayList implements List {
     }
 
     @Override
-    public int getLength() {
+    public int size() {
         return nextItemIndex;
     }
 
     @Override
-    public void add(Object o) {
+    public void add(T o) {
         if (nextItemIndex >= items.length) {
             Object[] newArray = new Object[items.length * 2];
             System.arraycopy(items, 0, newArray, 0, items.length);
@@ -42,16 +44,16 @@ public class ArrayList implements List {
     }
 
     @Override
-    public Object get(int index) {
+    public T get(int index) {
         if (index >= 0 && index < nextItemIndex)
-            return items[index];
-        else return null;
+            return (T)items[index];
+        else throw new getAbsentElementException("There is no element with index "+index+" in list");
     }
 
     @Override
-    public Object remove(int index) {
+    public T remove(int index) {
         if (index >= 0 && index < nextItemIndex) {
-            Object o = items[index];
+            T o = (T)items[index];
             System.arraycopy(items, index + 1, items, index, nextItemIndex - index - 1);
             nextItemIndex--;
             return o;
@@ -59,8 +61,19 @@ public class ArrayList implements List {
     }
 
     @Override
-    public Iterator iterator() {
-        return new ArrayListIterator(this);
+    public int hashCode() {
+        int rez=1;
+        for (int i = 0; i < nextItemIndex; i++) {
+            if(get(i)!=null)
+                rez+=31*rez+get(i).hashCode();
+            else rez+=31*rez;
+        }
+        return rez;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new ArrayListIterator<>(this);
     }
 
     @Override
@@ -69,7 +82,7 @@ public class ArrayList implements List {
         sb.append("{'");
         int length = 2;
         for (int i = 0; i < nextItemIndex; i++) {
-            Object o = items[i];
+            T o = (T)items[i];
             sb.append(o.toString() + "', '");
             length += o.toString().length() + 4;
         }
@@ -80,14 +93,15 @@ public class ArrayList implements List {
     }
 
 
-    public static class ArrayListIterator implements Iterator {
-        private ArrayList l;
+    public class ArrayListIterator<T> implements Iterator<T> {
+        private ArrayList<T> l;
         private int next;
+        private int startHashCode;
 
-        public ArrayListIterator(ArrayList list) {
+        public ArrayListIterator(ArrayList<T> list) {
             l = list;
             next = 0;
-
+            startHashCode =l.hashCode();
         }
 
         @Override
@@ -96,10 +110,13 @@ public class ArrayList implements List {
         }
 
         @Override
-        public Object next() {
+        public T next() {
             if (hasNext()) {
+                int curHashCode=l.hashCode();
+                if(startHashCode !=curHashCode)
+                    throw new modifyingWhileIterationException("Unable to modify list while iteration");
                 next++;
-                return l.items[next - 1];
+                return (T)l.items[next - 1];
             }
             return null;
         }
