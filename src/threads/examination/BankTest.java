@@ -14,14 +14,19 @@ public class BankTest {
             accounts.add(new Account("user"+i,(new Random().nextInt(9)+1)*1000));
         }
 
-        Bank bank=new Bank(accounts);
-        System.out.println(accounts.get(0).getBalance()+" "+accounts.get(1).getBalance());
-        System.out.println(accounts.get(2).getBalance()+" "+accounts.get(3).getBalance());
-        bank.transferMoney(accounts.get(0),accounts.get(1), 500);
-        bank.transferMoney(accounts.get(0),accounts.get(3), 3500);
-        bank.transferMoney(accounts.get(2),accounts.get(3), 3500);
+        Bank bank=new Bank();
 
+        for (int i = 0; i <10 ; i++) {
+            int source, dest;
+            while(true) {
+                 source = new Random().nextInt(10);
+                 dest = new Random().nextInt(10);
+                if(source!=dest)
+                    break;
+            }
+            bank.transferMoney(accounts.get(source),accounts.get(dest), (new Random().nextInt(4)+1)*1000);
 
+        }
     }
 
 
